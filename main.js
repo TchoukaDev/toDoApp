@@ -122,7 +122,7 @@ function addNewTask(){
     cross.classList.add('cross')
     cross.style.opacity = 0;
     cross.setAttribute("title", "Delete todo")
-    cross.style.backgroundImage = ("url(/images/icon-cross.svg)")
+    cross.style.backgroundImage = ("url(images/icon-cross.svg)")
     taskColRight.append(cross);
 
     tasksList.prepend(newTask);
@@ -286,7 +286,7 @@ function changeTheme() {
 
 function lightTheme() {
     document.body.classList.remove("dark");
-    themeButton.style.backgroundImage = "url(/images/icon-moon.svg)";
+    themeButton.style.backgroundImage = "url(images/icon-moon.svg)";
     localStorage.setItem("theme", "light")
 }
 
