@@ -292,6 +292,6 @@ function lightTheme() {
 
 function darkTheme() {
     document.body.classList.add("dark");
-    themeButton.style.backgroundImage = "url(/images/icon-sun.svg)"
+    themeButton.style.backgroundImage = "url(images/icon-sun.svg)"
     localStorage.setItem("theme", "dark")
 }
