@@ -1,0 +1,323 @@
+@use "variables" as *;
+
+@mixin mainTheme($theme) {
+    background-image: map-get($theme , background-image);
+    background-repeat: map-get($theme, background-repeat);
+    background-position: map-get($theme, background-position);
+    background-size: map-get($theme, background-size);
+    background-color: map-get($theme, main-background-color);
+    color: map-get($theme, color)
+}
+
+@mixin containerTheme($theme) {
+    background-color: map-get($theme, container-background-color)
+}
+
+@mixin buttons($theme) {
+    border: map-get($theme, buttonsborder);
+    border-radius: 50%;
+    background-color: transparent;
+    width: 25px;
+    height: 25px;
+}
+
+@mixin bordertasks($theme) {
+    border-bottom: map-get($theme, tasksborder)
+}
+
+@mixin input($theme){
+    color: map-get($theme, color)
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+*{
+    box-sizing: border-box;
+    font-family: "Josefin Sans";
+    
+}
+
+html, body {
+    @include mainTheme($lightTheme);
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    text-align: center;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+}
+
+button {
+    @include buttons($lightTheme);
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 500px;
+    margin: 50px auto 20px auto;
+    font-size: 36px;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    #themeButton {
+        background-image: url(/images/icon-moon.svg);
+        background-size: cover;
+        border: none;
+    }
+}
+
+.cross {
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none !important;
+    } 
+
+.dark {
+    @include mainTheme($darkTheme);
+        button {
+            @include buttons($darkTheme);
+        }
+        .container {
+            @include containerTheme($darkTheme);
+        }
+        .containerCenter {
+            box-shadow: none
+        }
+        input {
+            @include input($darkTheme);
+        }
+        .task {
+            @include bordertasks($darkTheme);
+            &:hover {
+                background-color: hsl(237, 14%, 26%, 0.1);
+            }
+            }
+        #all:hover {
+            cursor:pointer;
+            color: hsl(0, 0%, 98%);
+            font-weight: bold;
+        }
+    
+        #active:hover {
+            cursor:pointer;
+            color: hsl(0, 0%, 98%);
+            font-weight: bold;
+        }
+    
+        #completed:hover {
+            cursor:pointer;
+            color: hsl(0, 0%, 98%);
+            font-weight: bold;
+        }
+        #clear:hover {
+            cursor:pointer;
+            color: hsl(236, 9%, 61%);  
+        }
+        .completedTask{
+            color: hsl(235, 19%, 35%)
+        }
+    }
+
+.hidden {
+    display: none !important;
+}
+
+.container {
+    @include containerTheme($lightTheme);
+    width: 500px;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
+
+.input {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+input {
+    @include input($lightTheme);
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    &:focus {
+        border: none;
+        outline: none;
+    }
+}
+
+.containerCenter {
+    box-shadow: 0px 10px 20px 5px hsl(236, 33%, 92%, 0.5);
+    
+}
+
+#tasksList {
+    display: flex;
+    flex-direction: column;
+}
+
+.task {
+    @include bordertasks($lightTheme);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out, max-height 0.4s ease-out, padding 0.4s ease-out;
+    max-height: 100px;
+    padding: 15px;
+    cursor: grab;
+    &:hover {
+        background-color: hsl(233, 11%, 84%, 0.2);
+    }
+    &.dragging {
+        padding: 15px 30px;
+    }
+}
+
+.placeholder {
+    background-color:hsl(233, 11%, 84%, 0.2);
+    height: 5px;
+    margin: 0;
+    padding: 0;    
+
+}
+.removing {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 15px;
+    transform: translateY(-10px);
+    overflow: hidden;
+}
+
+.appearing {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 15px;
+    transform: translateY(-20px);
+    overflow: hidden;
+}
+#newTaskButton, .buttonTask{
+    &:hover {
+        position: relative
+    }
+    &:hover::after {
+        content: "";
+        position: absolute;
+        inset: -2px;  // Étend légèrement la pseudo-bordure
+        border-radius: inherit;
+        padding: 1.5px;
+        background: linear-gradient(to right, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+        mask: linear-gradient(white 0 0), linear-gradient(white 0 0) content-box; // le premier masque rend visible tout l'élément, le second rend visible seulement la partie intérieure de la box
+        -webkit-mask: linear-gradient(white 0 0), linear-gradient(white 0 0) content-box;
+        -webkit-mask-composite: xor;
+        mask-composite: exclude; //retire la partie où les deux masques se chevauchent pour ne laisser que les bordures rendues visibles par le premier masque
+    }
+}
+
+.completedTask{
+    text-decoration: line-through; 
+    color: hsl(233, 11%, 84%);
+}
+
+.activeButton {
+    background: linear-gradient(to right, hsl(192, 100%, 67%),hsl(280, 87%, 65%));
+    position: relative;
+}
+
+.activeButton::before { //Pour centrer l'icone au-dessus du background
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background-image: url(/images/icon-check.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bottomPart {
+    color: hsl(234, 11%, 52%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    font-size: 12px;
+    .filters {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-grow: 1;
+    }
+   .filterSelected{
+    color: hsl(220, 98%, 61%)
+   }
+}
+
+#all:hover {
+    cursor:pointer;
+    color: hsl(237, 14%, 26%);
+    font-weight: bold;
+}
+
+#active:hover {
+    cursor:pointer;
+    color: hsl(237, 14%, 26%);
+    font-weight: bold;
+}
+
+#completed:hover {
+    cursor:pointer;
+    color: hsl(237, 14%, 26%);
+    font-weight: bold;
+}
+#clear:hover {
+    cursor:pointer;
+    color: hsl(237, 14%, 26%);
+    font-weight: bold;
+}
+
+.dragAndDrop {
+    margin: 30px auto;
+    font-size: 12px;
+    color: hsl(234, 11%, 52%);
+}
+
+@media (max-width: 520px) {
+    header {
+        width: 375px
+    }
+    .container {
+        width: 375px;
+    }
+}
+
+@media (max-width : 450px) {
+    html, body {
+        @include mainTheme($mobileLightTheme);
+        font-size: 15px;
+    }
+    .container {
+        width: 300px;
+        margin: 10px auto;
+    }
+    header {
+        width: 300px;
+    }*
+
+    .dark {
+        @include mainTheme($mobileDarkTheme)
+    }
+
+}

@@ -1,0 +1,47 @@
+$darkTheme: (
+    background-image: url(/images/bg-desktop-dark.jpg),
+    background-repeat: no-repeat,
+    background-position: top center,
+    background-size: contain,
+    main-background-color: hsl(235, 21%, 11%),
+    container-background-color: hsl(235, 24%, 19%),
+    color: hsl(234, 39%, 85%),
+    tasksborder: 1px solid hsl(237, 14%, 26%),
+    buttonsborder: 1px solid hsl(237, 14%, 26%)
+);
+
+$mobileDarkTheme: (
+    background-image: url(/images/bg-mobile-dark.jpg),
+    background-repeat: no-repeat,
+    background-position: top center,
+    background-size: contain,
+    main-background-color: hsl(235, 21%, 11%),
+    container-background-color: hsl(235, 24%, 19%),
+    color: hsl(234, 39%, 85%),
+    tasksborder: 1px solid hsl(237, 14%, 26%),
+    buttonsborder: 1px solid hsl(237, 14%, 26%)
+); 
+
+$lightTheme: (   
+    background-image: url(/images/bg-desktop-light.jpg),
+    background-repeat: no-repeat,
+    background-position: top center,
+    background-size: contain,
+    main-background-color: hsl(0, 0%, 98%),
+    container-background-color: white,
+    color:hsl(237, 14%, 26%),
+    tasksborder: 1px solid hsl(236, 33%, 92%),
+    buttonsborder: 2px solid hsl(236, 33%, 92%)
+    );
+
+$mobileLightTheme: (
+    background-image: url(/images/bg-mobile-light.jpg),
+    background-repeat: no-repeat,
+    background-position: top center,
+    background-size: contain,
+    main-background-color: hsl(0, 0%, 98%),
+    container-background-color: white,
+    color:hsl(237, 14%, 26%),
+    tasksborder: 1px solid hsl(236, 33%, 92%),
+    buttonsborder: 2px solid hsl(236, 33%, 92%)
+);
