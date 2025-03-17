@@ -24,10 +24,14 @@ inputTask.addEventListener("keyup", (event) => {
 )
 themeButton.addEventListener("click", changeTheme)
 
-if (localStorage.getItem("theme") === "light") {
-    lightTheme()
-}
-else darkTheme();
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem("theme") === "light") {
+        lightTheme();
+    } else {
+        darkTheme();
+    }
+    loadTasks();
+});
 
 tasksList.addEventListener("dragstart", (e) => {
     draggingItem = e.target;
@@ -41,6 +45,7 @@ tasksList.addEventListener("dragend", (e) => {
     e.target.classList.remove("dragging");
     placeholder.replaceWith(draggingItem); // Remplace le placeholder par l'élément déplacé
     draggingItem = null;
+    saveTasks();
 });
 
 tasksList.addEventListener("dragover", (e) => {
@@ -153,8 +158,10 @@ function addNewTask(){
         else 
         cancelCompleteTask(newTask, buttonTask)
         tasksLeft = document.querySelectorAll(".activeTask");
+        saveTasks();
     })
 
+    saveTasks();
 }
 
 function deleteTask(newTask) {
@@ -164,6 +171,7 @@ itemsLeftCounter();
 setTimeout(() => {
 newTask.classList.add("hidden");
 newTask.remove();
+saveTasks();
 }, 400)
 }
 
@@ -265,6 +273,7 @@ function clearTasks(){
         task.classList.add('removing')
         setTimeout(() => {
         task.remove()
+        saveTasks();
         }, 400)
     })
 }
@@ -294,4 +303,87 @@ function darkTheme() {
     document.body.classList.add("dark");
     themeButton.style.backgroundImage = "url(images/icon-sun.svg)"
     localStorage.setItem("theme", "dark")
+}
+
+function saveTasks() {
+    const tasks = [];
+    document.querySelectorAll('.task').forEach(task => {
+        tasks.push({
+            text: task.querySelector('div:first-child').textContent,
+            completed: task.classList.contains('completedTask')
+        });
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function loadTasks() {
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+        const tasks = JSON.parse(savedTasks);
+        // Créer les tâches dans l'ordre inverse pour maintenir l'ordre d'origine
+        tasks.reverse().forEach(task => {
+            // Créer une nouvelle tâche
+            let newTask = document.createElement("div");
+            newTask.classList.add("task");
+            newTask.setAttribute('draggable', true);
+
+            // Créer la colonne de gauche avec le bouton et le texte
+            let taskColLeft = document.createElement("div");
+            taskColLeft.style.display = "flex";
+            taskColLeft.style.alignItems = "center";
+            taskColLeft.textContent = task.text;
+            
+            let buttonTask = document.createElement("button");
+            buttonTask.classList.add('buttonTask');
+            taskColLeft.prepend(buttonTask);
+            
+            // Créer la colonne de droite avec la croix
+            let taskColRight = document.createElement("div");
+            let cross = document.createElement("button");
+            cross.classList.add('cross');
+            cross.style.opacity = 0;
+            cross.setAttribute("title", "Delete todo");
+            cross.style.backgroundImage = "url(images/icon-cross.svg)";
+            taskColRight.append(cross);
+
+            // Assembler les éléments
+            newTask.prepend(taskColLeft);
+            newTask.append(taskColRight);
+            
+            // Ajouter les écouteurs d'événements
+            newTask.addEventListener('mouseover', () => {
+                cross.style.opacity = 1;
+            });
+            
+            newTask.addEventListener('mouseout', () => {
+                cross.style.opacity = 0;
+            });
+            
+            cross.addEventListener("click", () => {
+                deleteTask(newTask);
+            });
+            
+            buttonTask.addEventListener("click", () => {
+                if (!buttonTask.classList.contains('activeButton')) {
+                    completeTask(newTask, buttonTask);
+                } else {
+                    cancelCompleteTask(newTask, buttonTask);
+                }
+                saveTasks();
+            });
+
+            // Ajouter la tâche à la liste
+            tasksList.prepend(newTask);
+
+            // Si la tâche était complétée, la marquer comme telle
+            if (task.completed) {
+                completeTask(newTask, buttonTask);
+            } else {
+                newTask.classList.add("activeTask");
+            }
+        });
+        
+        // Mettre à jour le compteur
+        itemsLeftCounter();
+    }
 }
